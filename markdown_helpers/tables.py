@@ -23,13 +23,23 @@ def clean_table(tlines):
         _words = [word.ljust(lengths[idx]) for idx, word in enumerate(_row)]
         return '| '+' | '.join(_words)+' |'
 
-
+    escaped_bar = '\\|'
+    temp_replace = '$$'
 
     lengths = None 
     rows = [] 
     for line in tlines:
         line = line.strip().strip('|')
-        words = [word.strip() for word in line.split('|')]
+        replace = False
+        if escaped_bar in line:
+            line = line.replace(escaped_bar, temp_replace)
+            replace = True
+
+        if replace:
+            words = [word.strip().replace(temp_replace, escaped_bar) for word in line.split('|')]
+        else:
+            words = [word.strip() for word in line.split('|')]
+
         if not lengths: lengths = [len(word) for word in words]
         _lengths = [len(word) for word in words]
         _update_lengths(_lengths)
@@ -40,18 +50,30 @@ def clean_table(tlines):
 
 #========== TESTING ==========
 
-sample = """| Heading 1|Heading 2| Heading 3|
+table = """| Heading 1|Heading 2| Heading 3|
 | :-- | ------ | ---: |
 | blah | bab |baaa       aaab|
 |a|b|c|"""
 
 def test_smoke():
-    result = clean_table(sample)
+    result = clean_table(table)
     assert result[0] == "| Heading 1 | Heading 2 | Heading 3       |"
     assert result[1] == "| :--       | ------    | ---:            |"
     assert result[2] == "| blah      | bab       | baaa       aaab |"
     assert result[3] == "| a         | b         | c               |"
 
+
+table_escaped = """| Heading 1|Heading 2| Heading 3|
+| :-- | ------ | ---: |
+| bl\|ah | bab |baaa       aaab|
+|a|b|c|"""
+
+def test_escaped_bar():
+    result = clean_table(table_escaped)
+    assert result[0] == "| Heading 1 | Heading 2 | Heading 3       |"
+    assert result[1] == "| :--       | ------    | ---:            |"
+    assert result[2] == "| bl\|ah    | bab       | baaa       aaab |"
+    assert result[3] == "| a         | b         | c               |"
 
 
 
