@@ -6,12 +6,16 @@ Reformatting functions to help me maintain/export/import markdown in code files
 
 ## Example script and sample table are in `example` folder. The table contains markdown table sloppily formatted.
 ```python
-from markdown_helpers import clean_table
+import sys
+from markdown_helpers import clean_table                                                                                
+assert len(sys.argv) == 2, "Usage: bin/format.py <path to table file to clean>"                                         
 
-lines = open('example/arrow_table.md', 'r').readlines()
+file_path = sys.argv[1]
 
-for line in clean_table(lines):
-    print(line)
+lines = open(file_path, 'r').readlines()                                                                              
+                                                                                                                        
+for line in clean_table(lines):                                                                                         
+    print(line) 
 ```
 
 
