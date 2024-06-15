@@ -7,6 +7,12 @@ assert len(sys.argv) == 2, "Usage: bin/format.py <path to table file to clean>"
 file_path = sys.argv[1]
 
 lines = open(file_path, 'r').readlines()
+lines = [line for line in lines]
 
-for line in clean_table(lines):
-    print(line)
+for idx, line in enumerate(lines):
+    if not line.startswith('|'):
+        print(line.rstrip())
+    else:
+        for line in clean_table(lines[idx:]):
+            print(line)
+        break
