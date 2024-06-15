@@ -12,14 +12,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - install-deps:
-          name: install dependencies
-          command: |
-            python3 -m venv env
-            . env/bin/activate
-            pip install -r requirements.txt
+        name: install dependencies
+        run: |
+          python3 -m venv env
+          . env/bin/activate
+          pip install -r requirements.txt
         
       - run-tests:
-          name: run tests
-          command: |
-            . env/bin/activate
-            pytest -vvx markdown_helpers/tables.py 
+        name: run tests
+        run: |
+          . env/bin/activate
+          pytest -vvx markdown_helpers/tables.py 
