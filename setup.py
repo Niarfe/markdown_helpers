@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
       name='markdown_helpers',
-      version='0.0.2',
+      version='0.0.3',
       scripts=['mdformat'],
       description='Markdown formatting helpers',
       author='Efrain Olivares',
