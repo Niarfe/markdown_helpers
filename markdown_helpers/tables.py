@@ -82,6 +82,7 @@ def test_escaped_bar():
 
 def load_table(fpath):
     lines = open(fpath, 'r').readlines()
+    lines = [line.strip() for line in lines]
     return convert_lines_to_rows(lines)
 
 def convert_lines_to_rows(lines):
@@ -124,6 +125,15 @@ def test_convert_lines_to_rows_spaces():
             {"A":"uno", "B":"dos", "C":"tres"}
             ]
     assert rows == convert_lines_to_rows(lines)
+
+def test_load_table_little_vendue():
+    got_rows = load_table('markdown_helpers/little_vendue.md')
+    exp_rows = [
+            {'WORD': 'abasourdi', 'MEANING': 'stunned'},
+            {'WORD': 'accablé', 'MEANING': 'overwhelm'},
+            ]
+
+    assert exp_rows == got_rows
 
 if __name__=="__main__":
     import sys
