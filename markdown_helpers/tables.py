@@ -76,6 +76,54 @@ def test_escaped_bar():
     assert result[3] == "| a         | b         | c               |"
 
 
+#######################################################################################################################
+#    Load a table
+#######################################################################################################################
+
+def load_table(fpath):
+    lines = open(fpath, 'r').readlines()
+    return convert_lines_to_rows(lines)
+
+def convert_lines_to_rows(lines):
+    keys = lines[0].strip('|').split('|')
+    keys = [key.strip() for key in keys]
+    n_keys = len(keys)
+    rows = []
+    for line in lines[2:]:
+        cells = line.strip('|').split('|')
+        cells = [cell.strip() for cell in cells]
+        assert len(cells) == n_keys, f"Expected same length of cells as keys, but got keys={n_keys}, cells={len(cells)} for line = {line}"
+        row = {k:v for k,v in zip(keys, cells)}
+        rows.append(row)
+
+    return rows
+
+# TEST
+def test_convert_lines_to_rows():
+    lines = [
+            "A|B|C|",
+            "|--|--|--|",
+            "|one|two|three|",
+            "|uno|dos|tres|"
+            ]
+    rows = [
+            {"A":"one", "B":"two", "C":"three"},
+            {"A":"uno", "B":"dos", "C":"tres"}
+            ]
+    assert rows == convert_lines_to_rows(lines)
+            
+def test_convert_lines_to_rows_spaces():
+    lines = [
+            "| A   | B   | C     |",
+            "| --  |--   | --    |",
+            "| one | two | three |",
+            "| uno | dos | tres  |"
+            ]
+    rows = [
+            {"A":"one", "B":"two", "C":"three"},
+            {"A":"uno", "B":"dos", "C":"tres"}
+            ]
+    assert rows == convert_lines_to_rows(lines)
 
 if __name__=="__main__":
     import sys
